@@ -40,8 +40,9 @@ export default function CandidateForm({
         setErrors({});
         await onSave(parsed.data);
       }}
+      className="[&_label]:flex [&_label]:flex-col [&_label]:gap-2 [&_label]:text-[12px] [&_label]:font-[550] [&_label]:mb-[22px] [&_small]:font-normal"
     >
-      <div className="form-grid">
+      <div className="form-grid grid grid-cols-[1fr_1fr] gap-[0_20px] [@media(max-width:_760px)]:grid-cols-[1fr]">
         {(
           [
             {
@@ -86,9 +87,13 @@ export default function CandidateForm({
               aria-describedby={
                 errors[field.name] ? `${field.name}-error` : undefined
               }
+              className='[font:inherit] [-webkit-tap-highlight-color:transparent] [border:1px_solid_var(--line)] [background:var(--surface)] rounded-[7px] p-[11px_12px] text-ink w-full [&::placeholder]:text-muted [&[aria-invalid="true"]]:border-danger [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)]'
             />
             {errors[field.name] && (
-              <small className="field-error" id={`${field.name}-error`}>
+              <small
+                className="field-error block text-[12px] text-danger"
+                id={`${field.name}-error`}
+              >
                 {errors[field.name]}
               </small>
             )}
@@ -119,30 +124,42 @@ export default function CandidateForm({
           required
           aria-invalid={!!errors.skills}
           aria-describedby={errors.skills ? "skills-error" : undefined}
+          className='[font:inherit] [-webkit-tap-highlight-color:transparent] [border:1px_solid_var(--line)] [background:var(--surface)] rounded-[7px] p-[11px_12px] text-ink w-full [&::placeholder]:text-muted [&[aria-invalid="true"]]:border-danger [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)]'
         />
         {errors.skills && (
-          <small id="skills-error" className="field-error">
+          <small
+            id="skills-error"
+            className="field-error block text-[12px] text-danger"
+          >
             {errors.skills}
           </small>
         )}
-        <small>
+        <small className="block text-muted text-[12px]">
           {demo
             ? "Separate skills with commas. Use fictional information only."
             : "Separate skills with commas."}
         </small>
       </label>
       {Object.keys(errors).length > 0 && (
-        <p role="alert" className="field-error">
+        <p role="alert" className="field-error mt-0 leading-[1.7] text-danger">
           Please check the highlighted fields.
         </p>
       )}
-      <div className="form-footer">
+      <div className="form-footer [border-top:1px_solid_var(--line)] pt-[22px] flex justify-end gap-2.5">
         {onCancel && (
-          <button type="button" onClick={onCancel}>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="[font:inherit] [-webkit-tap-highlight-color:transparent] inline-flex items-center justify-center gap-2 min-h-10 [border:1px_solid_var(--line)] rounded-lg [background:var(--surface)] p-[9px_14px] text-ink cursor-pointer font-semibold whitespace-nowrap [&:hover]:[background:var(--soft)] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-not-allowed [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)] [&:focus-visible]:[outline-offset:3px] [@media(prefers-reduced-motion:_no-preference)]:[&:active:not(:disabled)]:[transform:translateY(0)_scale(0.98)]"
+          >
             Cancel
           </button>
         )}
-        <button className="primary" disabled={pending} type="submit">
+        <button
+          className='primary [font:inherit] [-webkit-tap-highlight-color:transparent] inline-flex items-center justify-center gap-2 min-h-10 [border:1px_solid_var(--line)] rounded-lg [background:var(--surface)] p-[9px_14px] text-ink cursor-pointer font-semibold whitespace-nowrap [&:hover]:[background:var(--soft)] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-not-allowed [button&]:[background:var(--primary)] [button&]:text-[#ffffff] [button&]:border-primary [button&]:shadow-[0_3px_5px_#5348c31a] [button&:hover]:[background:var(--primary-hover)] [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)] [[data-theme="dark"]_button&]:text-[#211937] [&:focus-visible]:[outline-offset:3px] [@media(prefers-reduced-motion:_no-preference)]:[button&:hover]:[transform:translateY(-2px)] [@media(prefers-reduced-motion:_no-preference)]:[button&:hover]:shadow-[0_6px_18px_var(--halo)] [@media(prefers-reduced-motion:_no-preference)]:[&:active:not(:disabled)]:[transform:translateY(0)_scale(0.98)]'
+          disabled={pending}
+          type="submit"
+        >
           {initial ? <Save size={17} /> : <ArrowRight size={17} />}{" "}
           {pending
             ? "Saving…"

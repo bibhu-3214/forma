@@ -155,7 +155,7 @@ export default function ServiceGate<T>({
   }
   if (restoring)
     return (
-      <main className="grid min-h-screen place-items-center bg-canvas p-6 text-muted">
+      <main className="record-grid min-h-screen place-items-center bg-canvas text-muted max-w-[1550px] m-auto p-[38px] [@media(max-width:_1150px)]:p-[28px_24px] [@media(max-width:_760px)]:p-[27px_18px]">
         <div role="status" className="text-center">
           <RefreshCw className="mx-auto mb-4 animate-spin motion-reduce:animate-none" />
           Opening {product.title}…
@@ -164,22 +164,22 @@ export default function ServiceGate<T>({
     );
   if (!account)
     return (
-      <main className="grid min-h-screen bg-canvas px-5 py-12 text-ink lg:place-items-center">
-        <div className="mx-auto grid w-full max-w-5xl overflow-hidden rounded-3xl border border-line bg-surface shadow-xl lg:grid-cols-2">
+      <main className="record-grid min-h-screen bg-canvas text-ink lg:place-items-center max-w-[1550px] m-auto p-[38px] [@media(max-width:_1150px)]:p-[28px_24px] [@media(max-width:_760px)]:p-[27px_18px]">
+        <div className="mx-auto record-grid w-full max-w-5xl overflow-hidden rounded-3xl border border-line bg-surface shadow-xl lg:grid-cols-2">
           <aside className="relative overflow-hidden bg-slate-950 p-8 text-white sm:p-12">
             <span className="mb-16 inline-flex items-center gap-2 text-lg font-semibold tracking-tight">
-              <span className="grid size-9 place-items-center rounded-xl bg-primary text-white dark:text-slate-950">
+              <span className="record-grid size-9 place-items-center rounded-xl bg-primary text-white dark:text-slate-950">
                 {product.title.charAt(0)}
               </span>
               {product.title}
             </span>
-            <p className="mb-4 text-xs font-semibold tracking-[.18em] text-indigo-200 uppercase">
+            <p className="mb-4 text-xs font-semibold tracking-[.18em] uppercase mt-0 text-muted leading-[1.7]">
               {product.eyebrow}
             </p>
-            <h1 className="max-w-sm text-4xl font-semibold leading-tight tracking-tight">
+            <h1 className="max-w-sm mt-0 text-[32px] tracking-[-1.2px] leading-[1.25] font-[650] mb-2.5 [@media(max-width:_1150px)]:text-[28px] [@media(max-width:_760px)]:text-[28px] [@media(max-width:_760px)]:max-w-[370px]">
               {product.tagline}
             </h1>
-            <p className="mt-5 max-w-sm text-sm leading-7 text-slate-300">
+            <p className="max-w-sm text-sm mt-0 text-muted leading-[1.7]">
               {product.description}
             </p>
             <div className="mt-14 flex items-center gap-3 border-t border-white/15 pt-6 text-xs text-slate-300">
@@ -189,10 +189,10 @@ export default function ServiceGate<T>({
           </aside>
           <section className="p-8 sm:p-12">
             <LockKeyhole className="mb-8 text-primary" size={28} />
-            <h2 className="text-2xl font-semibold tracking-tight">
+            <h2 className="font-semibold mt-0 text-[17px] tracking-[-0.35px] mb-1 [@media(max-width:_760px)]:text-[16px]">
               {register ? "Create your workspace" : "Welcome back"}
             </h2>
-            <p className="mt-2 text-sm leading-6 text-muted">
+            <p className="text-sm mt-0 text-muted leading-[1.7]">
               {register
                 ? "A private space for your work. No payment card required."
                 : localLogin
@@ -202,7 +202,7 @@ export default function ServiceGate<T>({
             {error && (
               <p
                 role="alert"
-                className="mt-5 rounded-xl bg-danger/10 p-3 text-sm text-danger"
+                className="rounded-xl bg-danger/10 p-3 text-sm mt-0 text-muted leading-[1.7]"
               >
                 {error}
               </p>
@@ -216,10 +216,10 @@ export default function ServiceGate<T>({
                 if (element instanceof HTMLInputElement)
                   setError(element.validationMessage);
               }}
-              className="mt-7 grid gap-5"
+              className="mt-7 record-grid gap-5 [&_label]:flex [&_label]:flex-col [&_label]:gap-2 [&_label]:text-[12px] [&_label]:font-[550] [&_label]:mb-[22px] [&_small]:font-normal"
             >
               {register && (
-                <label className="grid gap-2 text-sm font-medium">
+                <label className="record-grid gap-2 text-sm font-medium">
                   Your name
                   <Input
                     name="name"
@@ -230,7 +230,7 @@ export default function ServiceGate<T>({
                   />
                 </label>
               )}
-              <label className="grid gap-2 text-sm font-medium">
+              <label className="record-grid gap-2 text-sm font-medium">
                 Email address
                 <Input
                   name="email"
@@ -241,7 +241,7 @@ export default function ServiceGate<T>({
                   maxLength={120}
                 />
               </label>
-              <div className="grid gap-2 text-sm font-medium">
+              <div className="record-grid gap-2 text-sm font-medium">
                 <label htmlFor="account-password">Password</label>
                 <Input
                   id="account-password"
@@ -257,7 +257,7 @@ export default function ServiceGate<T>({
                 {register && (
                   <small
                     id="password-guidance"
-                    className="font-normal text-muted"
+                    className="font-normal block text-muted text-[12px]"
                   >
                     At least 12 characters. Avoid common passwords and personal
                     details.
@@ -273,12 +273,12 @@ export default function ServiceGate<T>({
                 <ArrowRight size={16} />
               </Button>
             </form>
-            <p className="mt-7 text-sm text-muted">
+            <p className="text-sm mt-0 text-muted leading-[1.7]">
               {register ? "Already have an account?" : "New here?"}{" "}
               <button
                 type="button"
                 disabled={busy}
-                className="font-semibold text-primary hover:underline"
+                className="hover:underline [font:inherit] [-webkit-tap-highlight-color:transparent] inline-flex items-center justify-center gap-2 min-h-10 [border:1px_solid_var(--line)] rounded-lg [background:var(--surface)] p-[9px_14px] text-ink cursor-pointer font-semibold whitespace-nowrap [&:hover]:[background:var(--soft)] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-not-allowed [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)] [&:focus-visible]:[outline-offset:3px] [@media(prefers-reduced-motion:_no-preference)]:[&:active:not(:disabled)]:[transform:translateY(0)_scale(0.98)]"
                 onClick={() => {
                   setRegister(!register);
                   setError("");
@@ -290,7 +290,7 @@ export default function ServiceGate<T>({
             {error && (
               <button
                 type="button"
-                className="mt-4 text-sm font-semibold text-primary"
+                className="mt-4 text-sm [font:inherit] [-webkit-tap-highlight-color:transparent] inline-flex items-center justify-center gap-2 min-h-10 [border:1px_solid_var(--line)] rounded-lg [background:var(--surface)] p-[9px_14px] text-ink cursor-pointer font-semibold whitespace-nowrap [&:hover]:[background:var(--soft)] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-not-allowed [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)] [&:focus-visible]:[outline-offset:3px] [@media(prefers-reduced-motion:_no-preference)]:[&:active:not(:disabled)]:[transform:translateY(0)_scale(0.98)]"
                 onClick={() => void load()}
               >
                 Reconnect
@@ -313,7 +313,7 @@ export default function ServiceGate<T>({
             type="button"
             disabled={busy}
             onClick={() => void load()}
-            className="inline-flex items-center gap-1 hover:text-primary"
+            className="hover:text-primary [font:inherit] [-webkit-tap-highlight-color:transparent] inline-flex items-center justify-center gap-2 min-h-10 [border:1px_solid_var(--line)] rounded-lg [background:var(--surface)] p-[9px_14px] text-ink cursor-pointer font-semibold whitespace-nowrap [&:hover]:[background:var(--soft)] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-not-allowed [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)] [&:focus-visible]:[outline-offset:3px] [@media(prefers-reduced-motion:_no-preference)]:[&:active:not(:disabled)]:[transform:translateY(0)_scale(0.98)]"
           >
             <RefreshCw size={13} />
             Refresh
@@ -321,7 +321,7 @@ export default function ServiceGate<T>({
           <button
             type="button"
             onClick={() => setSettings(true)}
-            className="hover:text-primary"
+            className="hover:text-primary [font:inherit] [-webkit-tap-highlight-color:transparent] inline-flex items-center justify-center gap-2 min-h-10 [border:1px_solid_var(--line)] rounded-lg [background:var(--surface)] p-[9px_14px] text-ink cursor-pointer font-semibold whitespace-nowrap [&:hover]:[background:var(--soft)] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-not-allowed [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)] [&:focus-visible]:[outline-offset:3px] [@media(prefers-reduced-motion:_no-preference)]:[&:active:not(:disabled)]:[transform:translateY(0)_scale(0.98)]"
           >
             Account
           </button>
@@ -342,7 +342,7 @@ export default function ServiceGate<T>({
                 setBusy(false);
               }
             }}
-            className="inline-flex items-center gap-1 hover:text-danger"
+            className="hover:text-danger [font:inherit] [-webkit-tap-highlight-color:transparent] inline-flex items-center justify-center gap-2 min-h-10 [border:1px_solid_var(--line)] rounded-lg [background:var(--surface)] p-[9px_14px] text-ink cursor-pointer font-semibold whitespace-nowrap [&:hover]:[background:var(--soft)] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-not-allowed [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)] [&:focus-visible]:[outline-offset:3px] [@media(prefers-reduced-motion:_no-preference)]:[&:active:not(:disabled)]:[transform:translateY(0)_scale(0.98)]"
           >
             <LogOut size={13} />
             Sign out
@@ -358,7 +358,7 @@ export default function ServiceGate<T>({
           <button
             type="button"
             disabled={busy}
-            className="ml-2 underline"
+            className="ml-2 underline [font:inherit] [-webkit-tap-highlight-color:transparent] inline-flex items-center justify-center gap-2 min-h-10 [border:1px_solid_var(--line)] rounded-lg [background:var(--surface)] p-[9px_14px] text-ink cursor-pointer font-semibold whitespace-nowrap [&:hover]:[background:var(--soft)] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-not-allowed [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)] [&:focus-visible]:[outline-offset:3px] [@media(prefers-reduced-motion:_no-preference)]:[&:active:not(:disabled)]:[transform:translateY(0)_scale(0.98)]"
             onClick={() => void load()}
           >
             Reload workspace
@@ -384,9 +384,9 @@ export default function ServiceGate<T>({
           setNotice("");
         }}
       >
-        <p className="text-sm text-muted">{account.email}</p>
+        <p className="text-sm mt-0 text-muted leading-[1.7]">{account.email}</p>
         <form
-          className="mt-5 grid gap-4"
+          className="mt-5 record-grid gap-4 [&_label]:flex [&_label]:flex-col [&_label]:gap-2 [&_label]:text-[12px] [&_label]:font-[550] [&_label]:mb-[22px] [&_small]:font-normal"
           onSubmit={async (event) => {
             event.preventDefault();
             const form = event.currentTarget,
@@ -408,7 +408,7 @@ export default function ServiceGate<T>({
             }
           }}
         >
-          <label className="grid gap-2 text-sm">
+          <label className="record-grid gap-2 text-sm">
             Current password
             <Input
               name="password"
@@ -418,7 +418,7 @@ export default function ServiceGate<T>({
               maxLength={128}
             />
           </label>
-          <label className="grid gap-2 text-sm">
+          <label className="record-grid gap-2 text-sm">
             New password
             <Input
               name="newPassword"
@@ -434,11 +434,11 @@ export default function ServiceGate<T>({
           </Button>
         </form>
         {notice && (
-          <p role="status" className="mt-4 text-sm text-muted">
+          <p role="status" className="text-sm mt-0 text-muted leading-[1.7]">
             {notice}
           </p>
         )}
-        <p className="mt-6 text-xs leading-6 text-muted">
+        <p className="text-xs mt-0 text-muted leading-[1.7]">
           Keep account access details safe. Email recovery and social sign-in
           require a separately configured delivery/provider service and are not
           enabled in this local release.

@@ -12,7 +12,7 @@ export default function SelectControl({
   const id = useId();
   const [selected, setSelected] = useState(String(defaultValue ?? ""));
   return (
-    <span className="select-control">
+    <span className="select-control block relative min-w-0 w-full [&_select]:[appearance:none] [&_select]:[-webkit-appearance:none] [&_select]:w-full [&_select]:min-w-0 [&_select]:[padding-inline-end:42px] [&_select]:[text-overflow:ellipsis] [&_select]:cursor-pointer [&_>_svg]:absolute [&_>_svg]:[inset-inline-end:14px] [&_>_svg]:top-[50%] [&_>_svg]:[transform:translateY(-50%)] [&_>_svg]:text-muted [&_>_svg]:[pointer-events:none] [@media(forced-colors:_active)]:[&_select]:[appearance:auto] [@media(forced-colors:_active)]:[&_>_svg]:hidden">
       <HeadlessSelect
         {...props}
         id={props.id || id}
@@ -23,7 +23,7 @@ export default function SelectControl({
         }}
         className={
           controlClass +
-          " inline-flex items-center justify-between gap-3 " +
+          "inline-flex items-center justify-between gap-3" +
           (props.className || "")
         }
       />

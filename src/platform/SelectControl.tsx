@@ -13,7 +13,6 @@ import {
 } from "./nativeEvents";
 const ui = (...values: (string | false | undefined | null)[]) =>
   values.filter(Boolean).join(" ");
-
 type SelectOption = {
   value: string;
   label: ReactNode;
@@ -23,7 +22,9 @@ type SelectOption = {
 function textOf(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
   if (Array.isArray(node)) return node.map(textOf).join("");
-  return React.isValidElement<{ children?: ReactNode }>(node)
+  return React.isValidElement<{
+    children?: ReactNode;
+  }>(node)
     ? textOf(node.props.children)
     : "";
 }
@@ -79,7 +80,7 @@ export default function SelectControl({
         aria-label={undefined}
         aria-labelledby={undefined}
         tabIndex={-1}
-        className="pointer-events-none sr-only"
+        className="pointer-events-none sr-only [font:inherit] [-webkit-tap-highlight-color:transparent] [border:1px_solid_var(--line)] [background:var(--surface)] rounded-[7px] p-[11px_12px] text-ink absolute w-px h-px overflow-hidden [clip:rect(0,_0,_0,_0)] [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)]"
         onInvalid={(event) => {
           event.preventDefault();
           onInvalidMessage?.(event.currentTarget.validationMessage);
