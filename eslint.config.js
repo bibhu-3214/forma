@@ -7,6 +7,9 @@ export default ts.config(
     ignores: [
       "dist",
       "node_modules",
+      "api/.venv/**",
+      "api/.local/**",
+      "output/**",
       "artifacts",
       "playwright-report",
       "test-results",
@@ -24,5 +27,5 @@ export default ts.config(
     },
   },
   { files: ["public/*.js"], languageOptions: { globals: globals.browser } },
-  { files: ["*.js"], languageOptions: { globals: globals.node } },
+  { files: ["*.js", "scripts/**/*.mjs"], languageOptions: { globals: globals.node } },
 );

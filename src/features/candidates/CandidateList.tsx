@@ -91,7 +91,12 @@ export default function CandidateList({
           <option value="experience">Experience</option>
         </SelectControl>
       </div>
-      <div className="table-scroll">
+      <div
+        className="table-scroll focus-visible:outline-2 focus-visible:outline-primary"
+        role="region"
+        aria-label="Candidate directory table, scroll for more columns"
+        tabIndex={0}
+      >
         <table>
           <thead>
             <tr>

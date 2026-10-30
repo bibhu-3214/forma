@@ -16,11 +16,21 @@ export default function Modal({
     el.showModal();
     // Keep Tab within the dialog, including after a status action removes its button.
     const containFocus = (event: KeyboardEvent) => {
-      if (event.key !== "Tab") return;
+      if (
+        event.key !== "Tab" ||
+        event.defaultPrevented ||
+        el.querySelector('[role="listbox"]')
+      )
+        return;
       const controls = Array.from(
         el.querySelectorAll<HTMLElement>(
           'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex="0"]',
         ),
+      ).filter(
+        (control) =>
+          control.tabIndex >= 0 &&
+          control.getClientRects().length > 0 &&
+          control.getAttribute("aria-hidden") !== "true",
       );
       const first = controls[0];
       const last = controls[controls.length - 1];

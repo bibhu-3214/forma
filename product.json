@@ -1,0 +1,11 @@
+{
+  "id": "forma",
+  "kind": "candidate",
+  "title": "Forma",
+  "tagline": "Talent, thoughtfully organised.",
+  "description": "Move from the first application to a considered decision, with one clear view of your hiring pipeline.",
+  "eyebrow": "RECRUITMENT WORKSPACE",
+  "collection": "Candidates",
+  "webPort": 5181,
+  "apiPort": 8101
+}

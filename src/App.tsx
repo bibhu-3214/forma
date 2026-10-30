@@ -40,8 +40,19 @@ const repository = new LocalCandidateRepository({
   getItem: (key) => localStorage.getItem(key),
   setItem: (key, value) => localStorage.setItem(key, value),
 });
-export default function App() {
-  const [loaded] = useState(() => repository.load());
+export default function App({
+  initialCandidates,
+  onPersist,
+}: {
+  initialCandidates?: Candidate[];
+  onPersist?: (records: Candidate[]) => Promise<void>;
+} = {}) {
+  const connected = Boolean(onPersist);
+  const [loaded] = useState(() =>
+    initialCandidates !== undefined
+      ? { candidates: initialCandidates, warning: "" }
+      : repository.load(),
+  );
   const [records, setRecords] = useState(loaded.candidates);
   const [warning, setWarning] = useState(loaded.warning);
   const [pending, setPending] = useState(false);
@@ -69,7 +80,8 @@ export default function App() {
         throw new Error(
           "Reset demo data before saving to recover the unreadable storage.",
         );
-      await repository.save(next);
+      if (onPersist) await onPersist(next);
+      else await repository.save(next);
       setRecords(next);
       setNotice(message);
       onSuccess?.();
@@ -105,7 +117,7 @@ export default function App() {
     statuses.map((s) => [s, records.filter((c) => c.status === s).length]),
   );
   return (
-    <div className="app">
+    <div className={connected ? "app connected-app" : "app"}>
       <a className="skip" href="#main">
         Skip to content
       </a>
@@ -120,7 +132,7 @@ export default function App() {
           </span>
           <div>
             <strong>Talent workspace</strong>
-            <small>Demo workspace</small>
+            <small>{connected ? "Account workspace" : "Demo workspace"}</small>
           </div>
           <span className="workspace-dot" />
         </div>
@@ -140,29 +152,35 @@ export default function App() {
           </NavLink>
         </nav>
         <div className="sidebar-bottom">
-          <div className="demo-card">
-            <ShieldCheck size={22} />
-            <strong>Made for exploring</strong>
-            <p>
-              Fictional candidates. Local data.
-              <br />
-              No application reaches an employer.
-            </p>
-            <button
-              onClick={() => {
-                setError("");
-                setReset(true);
-              }}
-            >
-              <RotateCcw size={14} />
-              Reset demo data
-            </button>
-          </div>
+          {!connected && (
+            <div className="demo-card">
+              <ShieldCheck size={22} />
+              <strong>Made for exploring</strong>
+              <p>
+                Fictional candidates. Local data.
+                <br />
+                No application reaches an employer.
+              </p>
+              <button
+                onClick={() => {
+                  setError("");
+                  setReset(true);
+                }}
+              >
+                <RotateCcw size={14} />
+                Reset demo data
+              </button>
+            </div>
+          )}
           <div className="profile">
             <span className="avatar">TW</span>
             <div>
               <strong>Talent team</strong>
-              <small>Local demo workspace</small>
+              <small>
+                {connected
+                  ? "Private candidate workspace"
+                  : "Local demo workspace"}
+              </small>
             </div>
           </div>
         </div>
@@ -183,7 +201,7 @@ export default function App() {
             <ThemeControl />
             <span className="demo-label">
               <i />
-              Demo workspace
+              {connected ? "Account workspace" : "Demo workspace"}
             </span>
           </div>
         </header>
@@ -200,7 +218,9 @@ export default function App() {
               </h1>
               <p>
                 {intake
-                  ? "Add a fictional candidate to explore the complete hiring workflow."
+                  ? connected
+                    ? "Add a candidate to your private hiring pipeline."
+                    : "Add a fictional candidate to explore the complete hiring workflow."
                   : overview
                     ? "Keep your pipeline moving and your next hire in focus."
                     : "Explore applications, review details and take the next step."}
@@ -237,11 +257,12 @@ export default function App() {
                   <span className="step">01 / 01</span>
                 </div>
                 <CandidateForm
+                  demo={!connected}
                   pending={pending}
                   onSave={async (input) => {
                     await persist(
                       [...records, createCandidate(input)],
-                      "Demo candidate added.",
+                      connected ? "Candidate saved." : "Demo candidate added.",
                       () => navigate("/candidates"),
                     );
                   }}
@@ -249,23 +270,23 @@ export default function App() {
               </section>
               <aside className="intake-note">
                 <Sparkles size={28} />
-                <h2>Try the whole journey.</h2>
+                <h2>{connected ? "A considered hiring process." : "Try the whole journey."}</h2>
                 <p>
                   Add a candidate, explore their profile, and move them through
                   your pipeline.
                 </p>
                 <ol>
-                  <li>Add fictional information</li>
+                  <li>{connected ? "Add candidate information" : "Add fictional information"}</li>
                   <li>Review the candidate profile</li>
                   <li>Shortlist, reject or reopen</li>
                 </ol>
                 <div className="note-rule" />
                 <ShieldCheck size={21} />
-                <h3>A safe place to explore</h3>
+                <h3>{connected ? "Your private workspace" : "A safe place to explore"}</h3>
                 <p>
-                  Data stays in this browser. There is no employer connection,
-                  email delivery or account. Please do not enter real applicant
-                  information.
+                  {connected
+                    ? "Records are saved to your account. This workspace does not send applications or email candidates."
+                    : "Data stays in this browser. There is no employer connection, email delivery or account. Please do not enter real applicant information."}
                 </p>
               </aside>
             </div>
@@ -364,7 +385,10 @@ export default function App() {
                           </div>
                         </div>
                       ))}
-                      <small>Based on your current demo records</small>
+                      <small>
+                        Based on your current {connected ? "saved" : "demo"}{" "}
+                        records
+                      </small>
                     </section>
                   </div>
                 </>
@@ -382,19 +406,24 @@ export default function App() {
           )}
           <footer>
             <span>
-              Fictional data, saved in this browser. No application reaches an
-              employer.
+              {connected
+                ? "Private candidate workspace. Records save to your account."
+                : "Fictional data, saved in this browser. No application reaches an employer."}
             </span>
-            <button
-              className="mobile-reset"
-              onClick={() => {
-                setError("");
-                setReset(true);
-              }}
-            >
-              Reset demo data
-            </button>
-            <span>FORMA · LOCAL DEMO</span>
+            {!connected && (
+              <button
+                className="mobile-reset"
+                onClick={() => {
+                  setError("");
+                  setReset(true);
+                }}
+              >
+                Reset demo data
+              </button>
+            )}
+            <span>
+              {connected ? "FORMA · ACCOUNT WORKSPACE" : "FORMA · LOCAL DEMO"}
+            </span>
           </footer>
         </main>
       </div>
@@ -420,6 +449,7 @@ export default function App() {
           )}
           {editing ? (
             <CandidateForm
+              demo={!connected}
               initial={candidate}
               pending={pending}
               onCancel={() => setEditing(false)}
@@ -474,7 +504,9 @@ export default function App() {
                 ))}
               </div>
               <p className="local-note">
-                Fictional demo profile · Changes are saved only in this browser.
+                {connected
+                  ? "Private candidate profile · Changes save to your account."
+                  : "Fictional demo profile · Changes are saved only in this browser."}
               </p>
               <div className="dialog-actions">
                 <button disabled={pending} onClick={() => setEditing(true)}>

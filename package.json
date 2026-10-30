@@ -1,30 +1,43 @@
 {
-  "name": "job-app-workspace",
+  "name": "forma-workspace",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "node scripts/dev.mjs",
+    "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test -c playwright.connected.config.ts",
+    "dev:demo": "vite --mode demo",
+    "start": "node scripts/dev.mjs",
+    "build:connected": "tsc --noEmit && vite build",
+    "check": "npm run typecheck && npm run lint",
+    "test:api": "api/.venv/bin/python api/scripts/with_local_postgres.py --temporary -- manage.py test workspace --verbosity 1",
+    "test:demo": "playwright test -c playwright.config.ts"
   },
   "dependencies": {
-    "lucide-react": "^0.468.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "@daypicker/react": "10.0.2",
+    "@radix-ui/react-dialog": "1.3.1",
+    "@radix-ui/react-popover": "1.3.1",
+    "@radix-ui/react-select": "2.4.1",
+    "lucide-react": "1.63.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "react-router-dom": "^7.9.4",
-    "zod": "^4.1.12"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
-    "@playwright/test": "^1.56.0",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@playwright/test": "1.64.1",
+    "@tailwindcss/vite": "4.3.3",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/node": "22.19.11",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.0.4",
@@ -33,9 +46,14 @@
     "globals": "^16.4.0",
     "jsdom": "^26.1.0",
     "prettier": "^3.6.2",
-    "typescript": "~5.9.3",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
     "typescript-eslint": "^8.46.1",
-    "vite": "^7.1.10",
-    "vitest": "^5.0.4"
+    "vite": "7.3.7",
+    "vitest": "4.1.12"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "engines": {
+    "node": ">=22.13.0 <25"
   }
 }

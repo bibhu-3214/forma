@@ -93,9 +93,7 @@ test("legacy routes, filters, pagination and confirmed reset", async ({
   page,
 }) => {
   await page.goto("/dashboard/frontend");
-  await expect(page.getByLabel("Filter by role")).toHaveValue(
-    "Front-End Developer",
-  );
+  await expect(page.getByLabel("Filter by role")).toHaveAttribute("data-value", "Front-End Developer");
   await page.goto("/register");
   await expect(page).toHaveURL(/\/intake$/);
   await page.goto("/home");

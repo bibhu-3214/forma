@@ -7,7 +7,9 @@ export default function CandidateForm({
   onSave,
   pending,
   onCancel,
+  demo = true,
 }: {
+  demo?: boolean;
   initial?: CandidateInput;
   onSave: (input: CandidateInput) => Promise<void>;
   pending: boolean;
@@ -93,9 +95,11 @@ export default function CandidateForm({
           </label>
         ))}
       </div>
-      <label>
+      <label htmlFor="candidate-role">
         Role
         <SelectControl
+          id="candidate-role"
+          aria-label="Role"
           name="jobTitle"
           defaultValue={initial?.jobTitle ?? roles[0]}
         >
@@ -122,7 +126,9 @@ export default function CandidateForm({
           </small>
         )}
         <small>
-          Separate skills with commas. Use fictional information only.
+          {demo
+            ? "Separate skills with commas. Use fictional information only."
+            : "Separate skills with commas."}
         </small>
       </label>
       {Object.keys(errors).length > 0 && (
@@ -142,7 +148,9 @@ export default function CandidateForm({
             ? "Saving…"
             : initial
               ? "Save changes"
-              : "Add demo candidate"}
+              : demo
+                ? "Add demo candidate"
+                : "Add candidate"}
         </button>
       </div>
     </form>

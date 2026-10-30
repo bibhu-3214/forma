@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-test("select arrows have a reserved lane in both themes and narrow layouts", async ({
+test("Tailwind option panels preserve spacing, keyboard focus and native-dialog editing", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -8,31 +8,29 @@ test("select arrows have a reserved lane in both themes and narrow layouts", asy
     for (const width of [1440, 390, 320]) {
       await page.setViewportSize({ width, height: 1000 });
       await page.goto("/candidates?role=Front-End%20Developer");
-      for (const picker of await page.locator("select").all()) {
-        await expect(picker).toHaveCSS("appearance", "none");
-        const metrics = await picker.evaluate((el) => {
-          const style = getComputedStyle(el);
-          const arrow = el
-            .parentElement!.querySelector("svg")!
-            .getBoundingClientRect();
-          const rect = el.getBoundingClientRect();
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d")!;
-          ctx.font = style.font;
-          return {
-            inset: rect.right - arrow.right,
-            reserve: parseFloat(style.paddingRight),
-            textWidth: ctx.measureText(el.selectedOptions[0].text).width,
-            available:
-              rect.width -
-              parseFloat(style.paddingLeft) -
-              parseFloat(style.paddingRight) -
-              2,
-          };
+      for (const picker of await page.getByRole("combobox").all()) {
+        expect(await picker.evaluate((element) => element.tagName)).toBe(
+          "BUTTON",
+        );
+        const geometry = await picker.evaluate((element) => {
+          const box = element.getBoundingClientRect(),
+            icon = element.querySelector("svg")!.getBoundingClientRect();
+          return { right: box.right, iconRight: icon.right, left: box.left };
         });
-        expect(metrics.inset).toBeGreaterThanOrEqual(13);
-        expect(metrics.reserve).toBeGreaterThanOrEqual(40);
-        expect(metrics.textWidth).toBeLessThanOrEqual(metrics.available);
+        expect(geometry.left).toBeGreaterThanOrEqual(0);
+        expect(geometry.right).toBeLessThanOrEqual(width);
+        expect(geometry.right - geometry.iconRight).toBeGreaterThanOrEqual(10);
+        await picker.click();
+        const panel = page.getByRole("listbox");
+        await expect(panel).toBeVisible();
+        const bounds = await panel.boundingBox();
+        expect(bounds).not.toBeNull();
+        if (bounds) {
+          expect(bounds.x).toBeGreaterThanOrEqual(0);
+          expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
+        }
+        await page.keyboard.press("Escape");
+        await expect(picker).toBeFocused();
       }
       await page
         .locator(".filters")
@@ -40,28 +38,31 @@ test("select arrows have a reserved lane in both themes and narrow layouts", asy
           path: `artifacts/appearance/selects-${theme}-${width}.png`,
         });
       await page.goto("/intake");
+      const role = page.getByRole("combobox", { name: "Role", exact: true });
+      await role.click();
       await page
-        .getByRole("combobox", { name: "Role", exact: true })
-        .selectOption("Node.js Developer");
-      await expect(
-        page.getByRole("combobox", { name: "Role", exact: true }),
-      ).toHaveValue("Node.js Developer");
+        .getByRole("option", { name: "Node.js Developer", exact: true })
+        .click();
+      await expect(role).toHaveAttribute("data-value", "Node.js Developer");
       await page.goto("/candidates");
-      await page.getByRole("button", { name: "View Avery Morgan" }).click();
-      await page.getByRole("button", { name: "Edit details" }).click();
-      await expect(page.getByRole("dialog").locator("select")).toHaveCSS(
-        "appearance",
-        "none",
-      );
       await page
-        .getByRole("dialog")
-        .locator("select")
-        .selectOption("FULL Stack Developer");
-      await page.getByRole("button", { name: "Save changes" }).click();
+        .getByRole("button", { name: "View Avery Morgan", exact: true })
+        .click();
+      await page
+        .getByRole("button", { name: "Edit details", exact: true })
+        .click();
+      const dialog = page.getByRole("dialog"),
+        editRole = dialog.getByRole("combobox", { name: "Role", exact: true });
+      await editRole.click();
+      await page
+        .getByRole("option", { name: "FULL Stack Developer", exact: true })
+        .click();
+      await expect(editRole).toBeFocused();
+      await page
+        .getByRole("button", { name: "Save changes", exact: true })
+        .click();
       await expect(
-        page
-          .getByRole("dialog")
-          .getByText("FULL Stack Developer", { exact: true }),
+        dialog.getByText("FULL Stack Developer", { exact: true }),
       ).toBeVisible();
     }
   }
