@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
+import WorkspaceLoading from "./platform/WorkspaceLoading";
 import { z } from "zod";
 import ServiceGate from "./platform/ServiceGate";
 import type { WorkspaceState } from "./platform/ServiceGate";
 import { Button, Modal } from "./platform/ui";
 import { message } from "./platform/api";
-import App from "./App";
+const App = lazy(() => import("./App"));
 import { candidateSchema } from "./features/candidates/model";
 import type { Candidate } from "./features/candidates/model";
 const backupSchema = z.object({
@@ -83,7 +84,13 @@ function ConnectedCandidates({ state }: { state: WorkspaceState<Candidate> }) {
           </p>
         )}
       </section>
-      <App initialCandidates={state.records} onPersist={state.save} />
+      <Suspense fallback={<WorkspaceLoading />}>
+        <App
+          draftOwner={String(state.account.id)}
+          initialCandidates={state.records}
+          onPersist={state.save}
+        />
+      </Suspense>
       <Modal
         busy={state.busy}
         open={loaded !== null}

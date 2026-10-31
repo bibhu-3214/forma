@@ -10,14 +10,18 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings 0",
     "test": "vitest run",
-    "test:e2e": "playwright test -c playwright.connected.config.ts",
+    "test:e2e": "node scripts/test-browser.mjs connected",
     "dev:demo": "vite --mode demo",
     "start": "node scripts/dev.mjs",
     "build:connected": "tsc --noEmit && vite build",
     "check": "npm run typecheck && npm run lint",
     "test:api": "api/.venv/bin/python api/scripts/with_local_postgres.py --temporary -- manage.py test workspace --verbosity 1",
     "test:demo": "playwright test -c playwright.config.ts",
-    "test:a11y": "playwright test -c playwright.connected.config.ts accessibility.spec.ts"
+    "test:a11y": "playwright test -c playwright.connected.config.ts accessibility.spec.ts",
+    "check:bundle": "node scripts/check-bundle.mjs",
+    "test:restore": "api/.venv/bin/python api/scripts/with_local_postgres.py --temporary -- scripts/restore_drill.py",
+    "test:e2e:cross": "node scripts/test-browser.mjs cross",
+    "test:budgets": "node --test scripts/check-bundle.test.mjs"
   },
   "dependencies": {
     "@daypicker/react": "10.0.2",

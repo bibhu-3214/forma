@@ -24,8 +24,12 @@ jobs:
       - run: yarn test
       - run: yarn test:api
       - run: yarn build
-      - run: yarn playwright install --with-deps chromium
+      - run: yarn check:bundle
+      - run: yarn test:budgets
+      - run: yarn test:restore
+      - run: yarn playwright install --with-deps chromium firefox webkit
       - run: yarn test:e2e
+      - run: yarn test:e2e:cross
       - run: yarn test:demo
       - uses: actions/upload-artifact@v4
         if: always()

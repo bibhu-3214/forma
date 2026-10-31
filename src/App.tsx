@@ -1,3 +1,4 @@
+import { bulkTransition } from "./features/candidates/bulk";
 import PipelineScene from "./features/overview/PipelineScene";
 import ThemeControl from "./features/appearance/ThemeControl";
 import Modal from "./components/Modal";
@@ -43,8 +44,10 @@ const repository = new LocalCandidateRepository({
 export default function App({
   initialCandidates,
   onPersist,
+  draftOwner = "demo",
 }: {
   initialCandidates?: Candidate[];
+  draftOwner?: string;
   onPersist?: (records: Candidate[]) => Promise<void>;
 } = {}) {
   const connected = Boolean(onPersist);
@@ -97,10 +100,12 @@ export default function App({
       setRecords(next);
       setNotice(message);
       onSuccess?.();
+      return true;
     } catch (e) {
       setError(
         e instanceof Error ? e.message : "Unable to save. Please try again.",
       );
+      return false;
     } finally {
       setPending(false);
     }
@@ -325,10 +330,11 @@ export default function App({
                   <span className="step text-[10px] text-muted">01 / 01</span>
                 </div>
                 <CandidateForm
+                  draftOwner={draftOwner}
                   demo={!connected}
                   pending={pending}
                   onSave={async (input) => {
-                    await persist(
+                    return persist(
                       [...records, createCandidate(input)],
                       connected ? "Candidate saved." : "Demo candidate added.",
                       () => navigate("/candidates"),
@@ -418,7 +424,7 @@ export default function App({
                           key={value}
                           className="metric-value [font-variant-numeric:tabular-nums] [@media(prefers-reduced-motion:_no-preference)]:animate-[value-in_450ms_var(--ease-out)_both]"
                         >
-                          {String(value).padStart(2, "0")}
+                          {new Intl.NumberFormat("en-IN").format(value)}
                         </strong>
                         <small className="block text-muted text-[12px]">
                           {detail}
@@ -492,6 +498,14 @@ export default function App({
                 </>
               )}
               <CandidateList
+                owner={draftOwner}
+                pending={pending}
+                onBulkStatus={async (ids, status) =>
+                  persist(
+                    bulkTransition(records, ids, status),
+                    "Candidate statuses updated.",
+                  )
+                }
                 records={records}
                 onSelect={(id) => {
                   setSelected(id);
@@ -553,12 +567,14 @@ export default function App({
           )}
           {editing ? (
             <CandidateForm
+              draftOwner={draftOwner}
+              draftId={candidate.id}
               demo={!connected}
               initial={candidate}
               pending={pending}
               onCancel={() => setEditing(false)}
               onSave={async (input) => {
-                await persist(
+                return persist(
                   records.map((c) =>
                     c.id === candidate.id ? { ...c, ...input } : c,
                   ),
