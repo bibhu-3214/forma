@@ -23,7 +23,10 @@ function ConnectedCandidates({ state }: { state: WorkspaceState<Candidate> }) {
     [error, setError] = useState("");
   return (
     <>
-      <div className="flex flex-wrap items-center justify-end gap-3 border-b border-line bg-surface px-5 py-2 text-xs text-muted lg:pl-64">
+      <section
+        aria-label="Candidate transfers"
+        className="flex flex-wrap items-center justify-end gap-3 border-b border-line bg-surface px-5 py-2 text-xs text-muted lg:pl-64"
+      >
         <button
           type="button"
           className="hover:underline [font:inherit] [-webkit-tap-highlight-color:transparent] inline-flex items-center justify-center gap-2 min-h-10 [border:1px_solid_var(--line)] rounded-lg [background:var(--surface)] p-[9px_14px] text-ink cursor-pointer font-semibold whitespace-nowrap [&:hover]:[background:var(--soft)] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-not-allowed [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)] [&:focus-visible]:[outline-offset:3px] [@media(prefers-reduced-motion:_no-preference)]:[&:active:not(:disabled)]:[transform:translateY(0)_scale(0.98)]"
@@ -79,7 +82,7 @@ function ConnectedCandidates({ state }: { state: WorkspaceState<Candidate> }) {
             {error}
           </p>
         )}
-      </div>
+      </section>
       <App initialCandidates={state.records} onPersist={state.save} />
       <Modal
         busy={state.busy}

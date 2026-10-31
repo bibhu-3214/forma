@@ -155,7 +155,7 @@ export default function ServiceGate<T>({
   }
   if (restoring)
     return (
-      <main className="record-grid min-h-screen place-items-center bg-canvas text-muted max-w-[1550px] m-auto p-[38px] [@media(max-width:_1150px)]:p-[28px_24px] [@media(max-width:_760px)]:p-[27px_18px]">
+      <main className="grid min-h-screen place-items-center bg-canvas text-muted max-w-[1550px] m-auto p-[38px] [@media(max-width:_1150px)]:p-[28px_24px] [@media(max-width:_760px)]:p-[27px_18px]">
         <div role="status" className="text-center">
           <RefreshCw className="mx-auto mb-4 animate-spin motion-reduce:animate-none" />
           Opening {product.title}…
@@ -164,22 +164,22 @@ export default function ServiceGate<T>({
     );
   if (!account)
     return (
-      <main className="record-grid min-h-screen bg-canvas text-ink lg:place-items-center max-w-[1550px] m-auto p-[38px] [@media(max-width:_1150px)]:p-[28px_24px] [@media(max-width:_760px)]:p-[27px_18px]">
-        <div className="mx-auto record-grid w-full max-w-5xl overflow-hidden rounded-3xl border border-line bg-surface shadow-xl lg:grid-cols-2">
+      <main className="grid min-h-screen bg-canvas text-ink lg:place-items-center max-w-[1550px] m-auto p-[38px] [@media(max-width:_1150px)]:p-[28px_24px] [@media(max-width:_760px)]:p-[27px_18px]">
+        <div className="mx-auto grid w-full max-w-5xl overflow-hidden rounded-3xl border border-line bg-surface shadow-xl lg:grid-cols-2">
           <aside className="relative overflow-hidden bg-slate-950 p-8 text-white sm:p-12">
             <span className="mb-16 inline-flex items-center gap-2 text-lg font-semibold tracking-tight">
-              <span className="record-grid size-9 place-items-center rounded-xl bg-primary text-white dark:text-slate-950">
+              <span className="grid size-9 place-items-center rounded-xl bg-primary text-white dark:text-slate-950">
                 {product.title.charAt(0)}
               </span>
               {product.title}
             </span>
-            <p className="mb-4 text-xs font-semibold tracking-[.18em] uppercase mt-0 text-muted leading-[1.7]">
+            <p className="mb-4 text-xs font-semibold tracking-[.18em] uppercase text-indigo-200 leading-[1.7]">
               {product.eyebrow}
             </p>
             <h1 className="max-w-sm mt-0 text-[32px] tracking-[-1.2px] leading-[1.25] font-[650] mb-2.5 [@media(max-width:_1150px)]:text-[28px] [@media(max-width:_760px)]:text-[28px] [@media(max-width:_760px)]:max-w-[370px]">
               {product.tagline}
             </h1>
-            <p className="max-w-sm text-sm mt-0 text-muted leading-[1.7]">
+            <p className="max-w-sm text-sm mt-0 text-slate-300 leading-[1.7]">
               {product.description}
             </p>
             <div className="mt-14 flex items-center gap-3 border-t border-white/15 pt-6 text-xs text-slate-300">
@@ -216,10 +216,10 @@ export default function ServiceGate<T>({
                 if (element instanceof HTMLInputElement)
                   setError(element.validationMessage);
               }}
-              className="mt-7 record-grid gap-5 [&_label]:flex [&_label]:flex-col [&_label]:gap-2 [&_label]:text-[12px] [&_label]:font-[550] [&_label]:mb-[22px] [&_small]:font-normal"
+              className="mt-7 grid gap-5"
             >
               {register && (
-                <label className="record-grid gap-2 text-sm font-medium">
+                <label className="grid gap-2 text-sm font-medium">
                   Your name
                   <Input
                     name="name"
@@ -230,7 +230,7 @@ export default function ServiceGate<T>({
                   />
                 </label>
               )}
-              <label className="record-grid gap-2 text-sm font-medium">
+              <label className="grid gap-2 text-sm font-medium">
                 Email address
                 <Input
                   name="email"
@@ -241,7 +241,7 @@ export default function ServiceGate<T>({
                   maxLength={120}
                 />
               </label>
-              <div className="record-grid gap-2 text-sm font-medium">
+              <div className="grid gap-2 text-sm font-medium">
                 <label htmlFor="account-password">Password</label>
                 <Input
                   id="account-password"
@@ -302,7 +302,10 @@ export default function ServiceGate<T>({
     );
   return (
     <>
-      <div className="platform-session sticky top-0 z-40 flex min-h-12 flex-wrap items-center justify-between gap-3 border-b border-line bg-surface px-4 py-2 text-xs text-muted sm:px-7">
+      <section
+        aria-label="Account controls"
+        className="platform-session sticky top-0 z-40 flex min-h-12 flex-wrap items-center justify-between gap-3 border-b border-line bg-surface px-4 py-2 text-xs text-muted sm:px-7"
+      >
         <span className="flex items-center gap-2">
           <ShieldCheck size={14} className="text-success" />
           <strong className="font-semibold text-ink">{account.name}</strong> ·
@@ -348,7 +351,7 @@ export default function ServiceGate<T>({
             Sign out
           </button>
         </span>
-      </div>
+      </section>
       {error && (
         <div
           role="alert"
@@ -386,7 +389,7 @@ export default function ServiceGate<T>({
       >
         <p className="text-sm mt-0 text-muted leading-[1.7]">{account.email}</p>
         <form
-          className="mt-5 record-grid gap-4 [&_label]:flex [&_label]:flex-col [&_label]:gap-2 [&_label]:text-[12px] [&_label]:font-[550] [&_label]:mb-[22px] [&_small]:font-normal"
+          className="mt-5 grid gap-4 [&_label]:flex [&_label]:flex-col [&_label]:gap-2 [&_label]:text-[12px] [&_label]:font-[550] [&_label]:mb-[22px] [&_small]:font-normal"
           onSubmit={async (event) => {
             event.preventDefault();
             const form = event.currentTarget,
@@ -408,7 +411,7 @@ export default function ServiceGate<T>({
             }
           }}
         >
-          <label className="record-grid gap-2 text-sm">
+          <label className="grid gap-2 text-sm">
             Current password
             <Input
               name="password"
@@ -418,7 +421,7 @@ export default function ServiceGate<T>({
               maxLength={128}
             />
           </label>
-          <label className="record-grid gap-2 text-sm">
+          <label className="grid gap-2 text-sm">
             New password
             <Input
               name="newPassword"

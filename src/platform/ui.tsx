@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import type {
   ButtonHTMLAttributes,
   InputHTMLAttributes,
@@ -19,10 +20,7 @@ export function Button({
     <button
       type="button"
       {...props}
-      className={
-        `inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 ${tone === "primary" ? "bg-primary text-white dark:text-slate-950 shadow-sm hover:bg-primary/90" : tone === "danger" ? "bg-danger/10 text-danger hover:bg-danger/20" : "bg-soft text-ink hover:bg-line"} ${className}` +
-        " text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 [font:inherit] [-webkit-tap-highlight-color:transparent] inline-flex items-center justify-center gap-2 min-h-10 [border:1px_solid_var(--line)] rounded-lg [background:var(--surface)] p-[9px_14px] text-ink cursor-pointer font-semibold whitespace-nowrap [&:hover]:[background:var(--soft)] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-not-allowed [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)] [&:focus-visible]:[outline-offset:3px] [@media(prefers-reduced-motion:_no-preference)]:[&:active:not(:disabled)]:[transform:translateY(0)_scale(0.98)]"
-      }
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 ${tone === "primary" ? "bg-primary text-white dark:text-slate-950 shadow-sm hover:bg-primary/90" : tone === "danger" ? "bg-danger/10 text-danger hover:bg-danger/20" : "bg-soft text-ink hover:bg-line"} ${className}`}
     >
       {children}
     </button>
@@ -34,11 +32,7 @@ export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className={
-        controlClass +
-        '[font:inherit] [-webkit-tap-highlight-color:transparent] [border:1px_solid_var(--line)] [background:var(--surface)] rounded-[7px] p-[11px_12px] text-ink w-full [&::placeholder]:text-muted [&[aria-invalid="true"]]:border-danger [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)]' +
-        (props.className || "")
-      }
+      className={controlClass + " " + (props.className || "")}
     />
   );
 }
@@ -46,11 +40,7 @@ export function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className={
-        controlClass +
-        'min-h-32 [font:inherit] [-webkit-tap-highlight-color:transparent] [border:1px_solid_var(--line)] [background:var(--surface)] rounded-[7px] p-[11px_12px] text-ink w-full [&::placeholder]:text-muted [&[aria-invalid="true"]]:border-danger [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)]' +
-        (props.className || "")
-      }
+      className={controlClass + " min-h-32 " + (props.className || "")}
     />
   );
 }
@@ -70,10 +60,7 @@ export function Dropdown({
   name?: string;
   value?: string;
   defaultValue?: string;
-  options: readonly {
-    value: string;
-    label: string;
-  }[];
+  options: readonly { value: string; label: string }[];
   onChange?: (value: string) => void;
   required?: boolean;
   disabled?: boolean;
@@ -92,7 +79,7 @@ export function Dropdown({
         aria-label={label}
         className={
           controlClass +
-          "inline-flex items-center justify-between gap-3 text-left"
+          " inline-flex items-center justify-between gap-3 text-left"
         }
       >
         <Select.Value placeholder={"Choose " + label.toLowerCase()} />
@@ -139,6 +126,7 @@ export function Modal({
   onClose: () => void;
   busy?: boolean;
 }) {
+  const returnFocus = useRef<HTMLElement | null>(null);
   return (
     <Dialog.Root
       open={open}
@@ -149,13 +137,26 @@ export function Modal({
       <Dialog.Portal>
         <Dialog.Overlay className="workspace-overlay fixed inset-0 z-50 bg-slate-950/45 backdrop-blur-sm" />
         <Dialog.Content
+          onOpenAutoFocus={() => {
+            returnFocus.current =
+              document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : null;
+          }}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            const target = returnFocus.current?.isConnected
+              ? returnFocus.current
+              : document.querySelector<HTMLElement>("main");
+            target?.focus({ preventScroll: true });
+          }}
           onPointerDownOutside={(event) => {
             if (busy) event.preventDefault();
           }}
           onEscapeKeyDown={(event) => {
             if (busy) event.preventDefault();
           }}
-          className="fixed top-1/2 left-1/2 z-[60] record-grid max-h-[calc(100dvh-24px)] w-[min(600px,calc(100%-24px))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-line bg-surface p-6 text-ink shadow-2xl sm:p-7"
+          className="fixed top-1/2 left-1/2 z-[60] grid max-h-[calc(100dvh-24px)] w-[min(600px,calc(100%-24px))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-line bg-surface p-6 text-ink shadow-2xl sm:p-7"
         >
           <header className="mb-5 flex items-center justify-between gap-4">
             <Dialog.Title className="text-xl font-semibold tracking-tight">
@@ -166,12 +167,12 @@ export function Modal({
               disabled={busy}
               aria-label="Close dialog"
               onClick={onClose}
-              className="record-grid size-9 place-items-center hover:bg-soft focus-visible:outline-2 focus-visible:outline-primary [font:inherit] [-webkit-tap-highlight-color:transparent] inline-flex items-center justify-center gap-2 min-h-10 [border:1px_solid_var(--line)] rounded-lg [background:var(--surface)] p-[9px_14px] text-ink cursor-pointer font-semibold whitespace-nowrap [&:hover]:[background:var(--soft)] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-not-allowed [@media(prefers-reduced-motion:_no-preference)]:[transition:background-color_180ms_ease,_border-color_180ms_ease,_color_180ms_ease,_box-shadow_180ms_ease,_transform_200ms_var(--ease-out)] [&:focus-visible]:[outline-offset:3px] [@media(prefers-reduced-motion:_no-preference)]:[&:active:not(:disabled)]:[transform:translateY(0)_scale(0.98)]"
+              className="grid size-9 place-items-center rounded-lg text-muted hover:bg-soft focus-visible:outline-2 focus-visible:outline-primary"
             >
               <X size={18} />
             </button>
           </header>
-          <Dialog.Description className="sr-only absolute w-px h-px overflow-hidden [clip:rect(0,_0,_0,_0)]">
+          <Dialog.Description className="sr-only">
             {title}. Changes are saved only after confirmation.
           </Dialog.Description>
           {children}

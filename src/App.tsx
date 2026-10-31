@@ -3,7 +3,7 @@ import ThemeControl from "./features/appearance/ThemeControl";
 import Modal from "./components/Modal";
 import CandidateList from "./features/candidates/CandidateList";
 import { formatDate as date } from "./lib/format";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Link,
   NavLink,
@@ -64,6 +64,18 @@ export default function App({
   const [motionReplay, setMotionReplay] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
+  const main = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const title =
+      location.pathname === "/intake"
+        ? "Candidate intake"
+        : location.pathname === "/candidates"
+          ? "Candidates"
+          : "Overview";
+    document.title = `${title} · Forma`;
+    main.current?.focus({ preventScroll: true });
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [location.pathname]);
   const candidate = records.find((c) => c.id === selected);
   const intake = location.pathname === "/intake";
   const overview = location.pathname === "/";
@@ -125,12 +137,15 @@ export default function App({
       }
     >
       <a
-        className="skip [-webkit-tap-highlight-color:transparent] text-inherit no-underline fixed top-[-100px] left-2.5 z-[10] [background:var(--surface)] p-2.5 [&:focus]:top-2.5 [&:focus-visible]:[outline-offset:3px]"
+        className="skip [-webkit-tap-highlight-color:transparent] text-inherit no-underline fixed top-[-100px] left-2.5 z-[80] [background:var(--surface)] p-2.5 [&:focus]:top-2.5 [&:focus-visible]:[outline-offset:3px]"
         href="#main"
       >
         Skip to content
       </a>
-      <aside className="sidebar w-[238px] fixed [inset:0_auto_0_0] [background:var(--surface)] [border-right:1px_solid_var(--line)] flex flex-col p-[30px_20px_18px] overflow-y-auto z-[2] [@media(max-width:_1150px)]:w-[205px] [@media(max-width:_1150px)]:p-[25px_14px] [@media(max-width:_760px)]:static [@media(max-width:_760px)]:w-auto [@media(max-width:_760px)]:p-4 [@media(max-width:_760px)]:[border-right:0] [@media(max-width:_760px)]:[border-bottom:1px_solid_var(--line)] [@media(max-width:_760px)]:block">
+      <aside
+        aria-label="Workspace sidebar"
+        className="sidebar w-[238px] fixed [inset:0_auto_0_0] [background:var(--surface)] [border-right:1px_solid_var(--line)] flex flex-col p-[30px_20px_18px] overflow-y-auto z-[2] [@media(max-width:_1150px)]:w-[205px] [@media(max-width:_1150px)]:p-[25px_14px] [@media(max-width:_760px)]:static [@media(max-width:_760px)]:w-auto [@media(max-width:_760px)]:p-4 [@media(max-width:_760px)]:[border-right:0] [@media(max-width:_760px)]:[border-bottom:1px_solid_var(--line)] [@media(max-width:_760px)]:block"
+      >
         <Link
           to="/"
           className="brand text-[31px] tracking-[-1.8px] font-[750] flex items-center p-[0_12px] gap-[9px] [@media(max-width:_760px)]:text-[27px] [@media(max-width:_760px)]:p-0"
@@ -232,6 +247,8 @@ export default function App({
         </header>
         <main
           id="main"
+          ref={main}
+          tabIndex={-1}
           key={location.pathname}
           className="max-w-[1550px] m-auto p-[38px] [@media(max-width:_1150px)]:p-[28px_24px] [@media(max-width:_760px)]:p-[27px_18px]"
         >
@@ -319,7 +336,10 @@ export default function App({
                   }}
                 />
               </section>
-              <aside className="intake-note [background:radial-gradient(ellipse_at_top_right,_var(--accent-wash),_transparent_65%),_var(--accent-soft)] rounded-xl p-[30px] text-[var(--accent)] [border:1px_solid_var(--accent-line)] [&_h2]:text-[24px] [&_h2]:text-ink [&_h2]:m-[20px_0_14px] [&_p]:text-[12px] [&_p]:text-muted [&_ol]:text-[12px] [&_ol]:leading-[2.5] [&_ol]:pl-[18px] [&_h3]:text-[14px] [&_h3]:text-ink [&_h3]:m-[12px_0] [@media(max-width:_760px)]:p-6">
+              <aside
+                aria-label="Candidate intake guidance"
+                className="intake-note [background:radial-gradient(ellipse_at_top_right,_var(--accent-wash),_transparent_65%),_var(--accent-soft)] rounded-xl p-[30px] text-[var(--accent)] [border:1px_solid_var(--accent-line)] [&_h2]:text-[24px] [&_h2]:text-ink [&_h2]:m-[20px_0_14px] [&_p]:text-[12px] [&_p]:text-muted [&_ol]:text-[12px] [&_ol]:leading-[2.5] [&_ol]:pl-[18px] [&_h3]:text-[14px] [&_h3]:text-ink [&_h3]:m-[12px_0] [@media(max-width:_760px)]:p-6"
+              >
                 <Sparkles size={28} />
                 <h2 className="mt-0 text-[17px] tracking-[-0.35px] mb-1 [@media(max-width:_760px)]:text-[16px]">
                   {connected
